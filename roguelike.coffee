@@ -138,10 +138,12 @@ redraws = []
 server = telnet.createServer (client) ->
   client.do.transmit_binary()
   px = py = 25
-  redraws.push ->
+  redraws.push handler = ->
     string = board.drawCells board.shadowcast [px, py], ((cell) -> not cell.blocked), 50
     client.write '\x1B[2J\n' + string
   redraw()
+  client.on 'close', ->
+    redraws.splice redraws.indexOf(handler), 1
   client.on 'data', (str) ->
     for ch in str.toString()
       if ch in 'hjkluybnq'
