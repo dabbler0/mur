@@ -16,7 +16,8 @@ exports.ShadowQueue = class ShadowQueue
     @queue = []
 
   emplace: (startAngle, endAngle) ->
-    startAngle %%= 360; endAngle %%= 360
+    startAngle %%= 360
+    endAngle %%= 360
 
     start = 0
     start++ until @queue[start] >= startAngle or start >= @queue.length
@@ -141,23 +142,23 @@ server = telnet.createServer (client) ->
     string = board.drawCells board.shadowcast [px, py], ((cell) -> not cell.blocked), 50
     client.write '\x1B[2J\n' + string
   redraw()
-  client.on 'data', (ch) ->
-    ch = ch.toString()
-    if ch in 'hjkluybnq'
-      board.cells[px][py].player = false
-      switch ch
-        when 'h' then px--
-        when 'j' then py++
-        when 'k' then py--
-        when 'l' then px++
-        when 'u' then px++; py--
-        when 'y' then px--; py--
-        when 'b' then px--; py++
-        when 'n' then px++; py++
-        when 'q' then process.exit 0
-      board.cells[px][py].player = true
+  client.on 'data', (str) ->
+    for ch in str.toString()
+      if ch in 'hjkluybnq'
+        board.cells[px][py].player = false
+        switch ch
+          when 'h' then px--
+          when 'j' then py++
+          when 'k' then py--
+          when 'l' then px++
+          when 'u' then px++; py--
+          when 'y' then px--; py--
+          when 'b' then px--; py++
+          when 'n' then px++; py++
+          when 'q' then process.exit 0
+        board.cells[px][py].player = true
 
-      redraw()
+        redraw()
 
 server.listen 23
 
