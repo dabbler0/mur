@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "telnet": "latest"
+    "telnet": "latest",
+    "colors": "latest"
   },
   "author": "Anthony Bau",
   "license": "MIT"
